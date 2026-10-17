@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.Process;
 import android.os.StatFs;
+import android.os.storage.StorageManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -80,7 +81,8 @@ public final class MainActivity extends android.app.Activity {
         StatFs stat = new StatFs(getFilesDir().getAbsolutePath());
         long free = stat.getAvailableBytes();
         long total = stat.getTotalBytes();
-        card("Almacenamiento", human(total - free) + " usados de " + human(total) + " · " + human(free) + " libres");
+        card("Almacenamiento", human(total - free) + " usados de " + human(total) + " · " + human(free) + " libres\n" +
+                "La limpieza se realiza mediante la interfaz segura de Android: tú eliges qué borrar.");
 
         ActivityManager.MemoryInfo memory = new ActivityManager.MemoryInfo();
         getSystemService(ActivityManager.class).getMemoryInfo(memory);
@@ -88,8 +90,10 @@ public final class MainActivity extends android.app.Activity {
 
         addSpace(8);
         text("Herramientas seguras", 19, TEXT, true);
+        action("Liberar espacio con Android", v -> openStorageManager());
         action("Revisar almacenamiento", v -> startActivity(new Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS)));
         action("Revisar consumo de batería", v -> startActivity(new Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS)));
+        action("Gestionar aplicaciones en segundo plano", v -> startActivity(new Intent(Settings.ACTION_APPLICATION_SETTINGS)));
         action("Permitir análisis de apps sin uso", v -> startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)));
 
         if (hasUsageAccess()) {
@@ -110,8 +114,16 @@ public final class MainActivity extends android.app.Activity {
 
         addSpace(12);
         text("Principios de privacidad", 19, TEXT, true);
-        card("Sin funciones engañosas", "Esta app no mata procesos, no borra fotos, no envía datos y no muestra publicidad. Cada acción sensible abre los ajustes oficiales de Android o pide confirmación.");
+        card("Sin funciones engañosas", "Esta app no mata procesos ni borra fotos automáticamente. Android administra la RAM por sí mismo; para cada aplicación puedes limitar batería, desinstalarla o borrar su caché desde los Ajustes oficiales. No se envían datos y no hay publicidad.");
         setContentView(scroll);
+    }
+
+    private void openStorageManager() {
+        try {
+            startActivity(new Intent(StorageManager.ACTION_MANAGE_STORAGE));
+        } catch (Exception ignored) {
+            startActivity(new Intent(Settings.ACTION_INTERNAL_STORAGE_SETTINGS));
+        }
     }
 
     private List<String> unusedApps() {
@@ -204,3 +216,4 @@ public final class MainActivity extends android.app.Activity {
         }
     }
 }
+
