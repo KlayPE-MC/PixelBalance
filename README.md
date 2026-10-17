@@ -1,5 +1,10 @@
 # Pixel Balance
 
+Aplicación local y sin anuncios para revisar batería, temperatura, memoria y
+almacenamiento de Android. Incluye accesos a la limpieza y administración de
+almacenamiento oficial del sistema, sin matar procesos ni borrar datos por su
+cuenta.
+
 Aplicación de diagnóstico local para Android 10 o posterior. Diseñada para ser
 una alternativa honesta a los limpiadores agresivos: no mata procesos, no borra
 archivos personales, no contiene publicidad y no envía información a servidores.
@@ -27,3 +32,4 @@ Al subir este proyecto a GitHub, la acción **Build Pixel Balance APK** aparece 
 la pestaña *Actions*. También se ejecuta automáticamente con cada cambio enviado
 a `main`. El APK queda disponible durante 14 días como el artefacto
 `PixelBalance-debug-apk`.
+
